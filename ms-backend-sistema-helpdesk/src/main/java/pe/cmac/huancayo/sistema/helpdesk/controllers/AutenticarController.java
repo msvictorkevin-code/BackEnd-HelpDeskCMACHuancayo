@@ -1,20 +1,18 @@
 package pe.cmac.huancayo.sistema.helpdesk.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pe.cmac.huancayo.sistema.helpdesk.dto.RestResponse;
-import pe.cmac.huancayo.sistema.helpdesk.dto.UsuarioDTORequest;
-import pe.cmac.huancayo.sistema.helpdesk.dto.UsuarioDTOResponse;
+import pe.cmac.huancayo.sistema.helpdesk.dto.usuario.UsuarioDTORequest;
+import pe.cmac.huancayo.sistema.helpdesk.dto.usuario.UsuarioDTOResponse;
 import pe.cmac.huancayo.sistema.helpdesk.service.UsuarioService;
+import pe.cmac.huancayo.sistema.helpdesk.utils.PathNames;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("autenticar")
+@RequestMapping(PathNames.URL_API_BASE)
 public class AutenticarController {
-
 
     private final UsuarioService usuarioService;
 
@@ -22,8 +20,8 @@ public class AutenticarController {
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping("/acceder")
-    public ResponseEntity<RestResponse<UsuarioDTOResponse>> acceder(@RequestBody UsuarioDTORequest request) {
+    @PostMapping(value = PathNames.URL_API_AUTENTICAR_ACCESO)
+    public ResponseEntity<RestResponse<UsuarioDTOResponse>> acceder(@Valid @RequestBody UsuarioDTORequest request) {
         RestResponse<UsuarioDTOResponse> response = new RestResponse<>();
         try {
             response = usuarioService.autenticar(request);

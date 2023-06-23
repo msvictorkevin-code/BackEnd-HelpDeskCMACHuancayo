@@ -1,43 +1,38 @@
 package pe.cmac.huancayo.sistema.helpdesk.entity;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @ToString
 @Data
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
-    @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1)
-    @Column(name = "id_usario")
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
+	@SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1)
+	@Column(name = "id_usuario")
+	private Integer id;
 
-    @NotNull(message = "Propiedad idColaborador requerido.")
-    @Column(name = "id_Colaborador")
-    private Integer idColaborador;
+	@Column(name = "id_Colaborador")
+	private Integer idColaborador;
 
-    @NotNull(message = "Propiedad username requerido.")
-    @Size(min = 0, max = 80, message = "Propiedad username con tamaño invalido.")
-    @Column(name = "username")
-    private String username;
 
-    @NotNull(message = "Propiedad password requerido.")
-    @Size(min = 0, max = 80, message = "Propiedad password con tamaño invalido.")
-    @Column(name = "password")
-    private String password;
+	@Column(name = "username")
+	private String username;
 
-    @NotNull(message = "Propiedad isAdmin requerido.")
-    @Size(min = 0, max = 80, message = "Propiedad isAdmin con tamaño invalido.")
-    @Column(name = "is_admin")
-    private Boolean isAdmin;
 
-    @Column(name = "nro_intentos")
-    private Integer nroIntentos;
+	@Column(name = "password")
+	private String password;
+
+
+	@Column(name = "is_admin",columnDefinition = "boolean default true")
+	private Boolean isAdmin;
+
+	@Column(name = "nro_intentos")
+	private Integer nroIntentos;
 
 }
