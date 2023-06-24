@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pe.cmac.huancayo.sistema.helpdesk.dto.RestResponse;
 import pe.cmac.huancayo.sistema.helpdesk.dto.colaborador.*;
 import pe.cmac.huancayo.sistema.helpdesk.entity.Colaborador;
+import pe.cmac.huancayo.sistema.helpdesk.entity.Usuario;
 import pe.cmac.huancayo.sistema.helpdesk.repository.ColaboradorRepository;
 import pe.cmac.huancayo.sistema.helpdesk.repository.UsuarioRepository;
 
@@ -42,7 +43,9 @@ class ColaboradorDAORepositoryImplTest {
     @Test
     void registrar() {
         Colaborador colaborador = buildColaborador();
+        Usuario usuario = buildUsuario();
         Mockito.when(colaboradorRepository.save(Mockito.any())).thenReturn(colaborador);
+        Mockito.when(usuarioRepository.save(Mockito.any())).thenReturn(usuario);
         ColaboradorDTORegistrarRequest request = buildColaboradorDTORegistrarRequest();
         RestResponse<ColaboradorDTORegistrarResponse> response = colaboradorDAORepository.registrar(request);
         Assertions.assertNotNull(response);
@@ -51,7 +54,9 @@ class ColaboradorDAORepositoryImplTest {
     @Test
     void actualizar() {
         Colaborador colaborador = buildColaborador();
+        Usuario usuario = buildUsuario();
         Mockito.when(colaboradorRepository.save(Mockito.any())).thenReturn(colaborador);
+        Mockito.when(usuarioRepository.save(Mockito.any())).thenReturn(usuario);
         ColaboradorDTOActualizarRequest request = buildColaboradorDTOActualizarRequest();
         RestResponse<ColaboradorDTOActualizarResponse> response = colaboradorDAORepository.actualizar(request);
         Assertions.assertNotNull(response);
@@ -68,11 +73,24 @@ class ColaboradorDAORepositoryImplTest {
 
     @Test
     void obtener() {
+        Colaborador colaborador = buildColaborador();
+        Usuario usuario = buildUsuario();
+        Mockito.when(usuarioRepository.findUsuarioById(Mockito.anyInt())).thenReturn(usuario);
+        Mockito.when(colaboradorRepository.findColaboradorById(Mockito.anyInt())).thenReturn(colaborador);
+        RestResponse<ColaboradorDTOItemResponse> response = colaboradorDAORepository.obtener(1, 1);
+        Assertions.assertNotNull(response);
     }
 
 
     @Test
     void deshabilitar() {
+        Colaborador colaborador = buildColaborador();
+        Mockito.when(colaboradorRepository.save(Mockito.any())).thenReturn(colaborador);
+        Mockito.when(colaboradorRepository.findColaboradorById(Mockito.anyInt())).thenReturn(colaborador);
+
+        RestResponse<ColaboradorDTODeshabilitarResponse> deshabilitar = colaboradorDAORepository.deshabilitar(1);
+        Assertions.assertNotNull(deshabilitar);
+
     }
 
     private List<Colaborador> buildListColaborador() {
@@ -115,5 +133,15 @@ class ColaboradorDAORepositoryImplTest {
         colaborador.setArea("Sistemas");
         colaborador.setIsActivo(true);
         return colaborador;
+    }
+
+    private Usuario buildUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        usuario.setIdColaborador(1);
+        usuario.setUsername("msvickei");
+        usuario.setPassword("PEsi895");
+        usuario.setIsAdmin(false);
+        return usuario;
     }
 }
