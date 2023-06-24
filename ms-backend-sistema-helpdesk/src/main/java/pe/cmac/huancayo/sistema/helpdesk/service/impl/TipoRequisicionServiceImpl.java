@@ -14,7 +14,7 @@ public class TipoRequisicionServiceImpl implements TipoRequisicionService {
 
 	private TipoRequisicionDAORepository tipoRequisicionDAORepository;
 
-	private TipoRequisicionServiceImpl(TipoRequisicionDAORepository tipoRequisicionDAORepository) {
+	public TipoRequisicionServiceImpl(TipoRequisicionDAORepository tipoRequisicionDAORepository) {
 
 		this.tipoRequisicionDAORepository = tipoRequisicionDAORepository;
 	}

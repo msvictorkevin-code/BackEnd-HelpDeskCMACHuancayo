@@ -4,12 +4,12 @@ import org.springframework.stereotype.Service;
 import pe.cmac.huancayo.sistema.helpdesk.dto.RestResponse;
 import pe.cmac.huancayo.sistema.helpdesk.dto.ticket.*;
 import pe.cmac.huancayo.sistema.helpdesk.repository.impl.TicketDAORepository;
-import pe.cmac.huancayo.sistema.helpdesk.service.TicketServicie;
+import pe.cmac.huancayo.sistema.helpdesk.service.TicketService;
 
 import java.util.List;
 
 @Service
-public class TicketServiceImpl implements TicketServicie {
+public class TicketServiceImpl implements TicketService {
 
     private TicketDAORepository ticketDAORepository;
 

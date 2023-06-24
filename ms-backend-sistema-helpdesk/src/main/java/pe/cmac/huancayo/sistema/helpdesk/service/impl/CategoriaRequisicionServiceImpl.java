@@ -8,12 +8,13 @@ import pe.cmac.huancayo.sistema.helpdesk.service.CategoriaRequisicionService;
 
 import java.util.List;
 
+
 @Service
 public class CategoriaRequisicionServiceImpl implements CategoriaRequisicionService {
 
     private final CategoriaRequisicionDAORepository categoriaRequisicionDAORepository;
 
-    private CategoriaRequisicionServiceImpl(CategoriaRequisicionDAORepository categoriaRequisicionDAORepository) {
+    public CategoriaRequisicionServiceImpl(CategoriaRequisicionDAORepository categoriaRequisicionDAORepository) {
 
         this.categoriaRequisicionDAORepository = categoriaRequisicionDAORepository;
     }

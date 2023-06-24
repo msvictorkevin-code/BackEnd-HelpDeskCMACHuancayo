@@ -5,7 +5,7 @@ import pe.cmac.huancayo.sistema.helpdesk.dto.ticket.*;
 
 import java.util.List;
 
-public interface TicketServicie {
+public interface TicketService {
     RestResponse<TicketDTORegistrarResponse> registrar(TicketDTORegistrarRequest request);
 
     RestResponse<TicketDTOActualizarResponse> actualizar(TicketDTOActualizarRequest request);

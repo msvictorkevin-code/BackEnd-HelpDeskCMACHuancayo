@@ -139,6 +139,9 @@
 						<configuration>
 							<destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
 							<propertyName>surefireArgLine</propertyName>
+							<excludes>
+
+							</excludes>
 						</configuration>
 					</execution>
 					<execution>
