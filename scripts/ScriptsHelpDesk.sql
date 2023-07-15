@@ -1,4 +1,4 @@
-drop TABLE bd_helpdesk
+drop DATAbase bd_helpdesk
 
 create DATAbase bd_helpdesk 
 
@@ -18,6 +18,8 @@ CREATE TABLE colaborador (
 
 INSERT INTO colaborador ( nombres, apellidos, cod_empleado, area,is_activo ) VALUES 	( 'Victor', 'Matos', '10055989', 'Sistemas',TRUE );
 INSERT INTO colaborador ( nombres, apellidos, cod_empleado, area,is_activo ) VALUES 	( 'Juan', 'Perez', '10066213', 'Finanzas',TRUE );
+
+SELECT * from colaborador
  
 CREATE SEQUENCE seq_usuario START WITH 1 INCREMENT BY 1 MAXVALUE 99999 MINVALUE 1;
 
@@ -35,7 +37,8 @@ CREATE TABLE usuario (
 INSERT INTO usuario ( id_Colaborador, username, PASSWORD, is_admin, nro_intentos ) VALUES 	( 1, 'usuadmin', 'Peru20239', TRUE, 0 );
 INSERT INTO usuario ( id_Colaborador, username, PASSWORD, is_admin, nro_intentos ) VALUES 	( 2, 'usucolab', 'Peru20239', FALSE, 0 );
 
-
+SELECT * from colaborador where id_Colaborador = 1;
+select * from usuario where id_usuario = 1;
 
 SELECT	MD5( 'Peru2023.' );
 SELECT	MD5( 'Peru2025.' );
@@ -75,7 +78,7 @@ INSERT INTO categoria_requisicion ( id_tipo,nombre, descripcion) VALUES 	( 2,'Ac
 INSERT INTO categoria_requisicion ( id_tipo,nombre, descripcion) VALUES 	( 3,'Actualizacion de cuenta windows','Categoria requisicion Actualizacion de cuenta windows' );
 INSERT INTO categoria_requisicion ( id_tipo,nombre, descripcion) VALUES 	( 3,'Actualizacion de credenciales SAP','Categoria requisicion Actualizacion de credenciales SAP' );
 
-select * from categoria_requisicion
+select * from categoria_requisicion where id_tipo = 2
 
 CREATE SEQUENCE seq_ticket START WITH 1 INCREMENT BY 1 MAXVALUE 99999 MINVALUE 1;
 
@@ -102,7 +105,7 @@ VALUES ('Descripcion test2','Iniciado',now(),now(),1,2,2,1);
 INSERT INTO ticket (descripcion,estado,fecha_generada,fecha_cierre,prioridad,id_tipo,id_categoria,id_usuario) 
 VALUES ('Descripcion test3','Iniciado',now(),now(),1,2,2,1);
 
-select * from ticket
+select * from ticket where id_ticket = 4
 
 CREATE SEQUENCE seq_detalle START WITH 1 INCREMENT BY 1 MAXVALUE 99999 MINVALUE 1;
 
@@ -138,6 +141,8 @@ DROP SEQUENCE IF EXISTS  seq_tipo_requisicion;
 
 
  select * from colaborador
+ 
+  select * from usuario
 
 
 SELECT count(	*)  FROM 	colaborador WHERE id_Colaborador = 1;
@@ -186,3 +191,25 @@ det
         and  u.id_usuario = 3 LIMIT 1
 
   
+   select id_ticket ,
+	t.descripcion ,
+	estado,
+	fecha_generada ,
+	fecha_cierre,
+	prioridad ,
+	tr.nombre as tipo  ,
+	cr.nombre  as categoria,
+	username  from Ticket t 
+	inner join tipo_requisicion tr on t.id_tipo = tr.id_tipo
+	inner join categoria_requisicion cr  on t.id_categoria = cr.id_categoria
+	inner join usuario u on t.id_usuario = u.id_usuario
+select * from 	Ticket
+	
+select id_ticket , t.descripcion ,estado, fecha_generada,prioridad, 
+	   tr.nombre as tipo , cr.nombre  as categoria,u.username 
+from Ticket t 
+inner join tipo_requisicion tr on t.id_tipo = tr.id_tipo
+inner join categoria_requisicion cr  on t.id_categoria = cr.id_categoria
+inner join usuario u on t.id_usuario = u.id_usuario
+where id_ticket = 1 and t.id_categoria = 2 and t.id_tipo = 2 and t.id_usuario = 1 and
+estado = 'Iniciado' and fecha_generada between '2023-07-11 00:00:00' and '2023-07-11 00:00:00'

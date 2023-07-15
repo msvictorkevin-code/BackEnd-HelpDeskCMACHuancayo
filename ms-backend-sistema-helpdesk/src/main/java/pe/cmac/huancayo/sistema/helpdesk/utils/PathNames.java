@@ -25,12 +25,20 @@ public class PathNames {
     public static final String URL_API_TICKET_LISTAR = "/ticket/listar";
 
     public static final String URL_API_TICKET_OBTENER = "/ticket/obtener/{idTicket}";
-    
- // endpoints TipoRequisicion    
+
+    // endpoints TipoRequisicion
     public static final String URL_API_TIPO_REQUISICION_LISTAR = "/tipo/requisicion/listar";
-    
+
     // endpoints CategoriaRequisicion 
     public static final String URL_API_CATEGORIA_REQUISICION_LISTAR = "/categoria/requisicion/listar/{idTipo}";
 
-    
+    // endpoints reportes
+    public static final String URL_API_REPORTE_LISTADO = "/reporte/listado";
+    public static final String URL_API_REPORTE_LISTAR_ESTADOS = "/reporte/listar/estados";
+    public static final String URL_API_REPORTE_LISTAR_USUARIOS = "/reporte/listar/usuarios";
+
+    public static final String URL_API_REPORTE_EXPORTAR_PDF = "/reporte/exportar-pdf";
+
+    public static final String URL_API_REPORTE_EXPORTAR_XLSX = "/reporte/exportar-xlsx";
+
 }

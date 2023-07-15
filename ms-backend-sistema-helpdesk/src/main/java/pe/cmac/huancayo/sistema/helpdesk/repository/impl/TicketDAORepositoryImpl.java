@@ -1,5 +1,6 @@
 package pe.cmac.huancayo.sistema.helpdesk.repository.impl;
 
+import jakarta.persistence.Tuple;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import pe.cmac.huancayo.sistema.helpdesk.entity.Ticket;
 import pe.cmac.huancayo.sistema.helpdesk.repository.TicketRepository;
 import pe.cmac.huancayo.sistema.helpdesk.utils.Messages;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -69,19 +71,18 @@ public class TicketDAORepositoryImpl implements TicketDAORepository {
     public RestResponse<List<TicketDTOListarResponse>> listar() {
         RestResponse<List<TicketDTOListarResponse>> response = new RestResponse<>();
         try {
-            List<Ticket> ticketList = ticketRepository.findAll();
-            List<TicketDTOListarResponse> ticketDTOList = ticketList.stream().toList().stream().map(x -> {
+            List<Tuple> ticketList = ticketRepository.listar();
+            List<TicketDTOListarResponse> ticketDTOList = ticketList.stream().toList().stream().map(t -> {
                 TicketDTOListarResponse ticketDTOListarResponse = new TicketDTOListarResponse();
-                ticketDTOListarResponse.setIdTicket(x.getId());
-                ticketDTOListarResponse.setDescripcion(x.getDescripcion());
-                ticketDTOListarResponse.setEstado(x.getEstado());
-                ticketDTOListarResponse.setFechaCierre(x.getFechaCierre());
-                ticketDTOListarResponse.setFechaGenerada(x.getFechaGenerada());
-                ticketDTOListarResponse.setEstado(x.getEstado());
-                ticketDTOListarResponse.setPrioridad(x.getPrioridad());
-                ticketDTOListarResponse.setIdTipo(x.getIdTipo());
-                ticketDTOListarResponse.setIdCategoria(x.getIdCategoria());
-                ticketDTOListarResponse.setIdUsuario(x.getIdUsuario());
+                ticketDTOListarResponse.setIdTicket(t.get("id_ticket", Integer.class));
+                ticketDTOListarResponse.setDescripcion(t.get("descripcion", String.class));
+                ticketDTOListarResponse.setEstado(t.get("estado", String.class));
+                ticketDTOListarResponse.setFechaCierre(t.get("fecha_cierre", Date.class));
+                ticketDTOListarResponse.setFechaGenerada(t.get("fecha_generada", Date.class));
+                ticketDTOListarResponse.setPrioridad(t.get("prioridad", Integer.class));
+                ticketDTOListarResponse.setTipo(t.get("tipo", String.class));
+                ticketDTOListarResponse.setCategoria(t.get("categoria", String.class));
+                ticketDTOListarResponse.setUsuario(t.get("username", String.class));
                 return ticketDTOListarResponse;
             }).toList();
             response.setData(ticketDTOList);
