@@ -1,5 +1,6 @@
 package pe.cmac.huancayo.sistema.helpdesk.service.impl;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import pe.cmac.huancayo.sistema.helpdesk.dto.RestResponse;
 import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.EstadoTicketDTOResponse;
@@ -9,6 +10,7 @@ import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.UsuarioDTOResponse;
 import pe.cmac.huancayo.sistema.helpdesk.repository.impl.ReporteDAORepository;
 import pe.cmac.huancayo.sistema.helpdesk.service.ReporteService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -31,13 +33,13 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
-    public void exportarPdf(ReporteConsultaRequest request) {
-        repository.exportarPdf(request);
+    public void exportarPdf(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+        repository.exportarPdf(request,response);
     }
 
     @Override
-    public void exportarXlsx(ReporteConsultaRequest request) {
-         repository.exportarXlsx(request);
+    public void exportarXlsx(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+         repository.exportarXlsx(request,response);
     }
 
     @Override

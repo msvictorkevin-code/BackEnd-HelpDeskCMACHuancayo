@@ -1,7 +1,19 @@
 package pe.cmac.huancayo.sistema.helpdesk.repository.impl;
 
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.CMYKColor;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,9 +30,13 @@ import pe.cmac.huancayo.sistema.helpdesk.repository.TicketRepository;
 import pe.cmac.huancayo.sistema.helpdesk.repository.UsuarioRepository;
 import pe.cmac.huancayo.sistema.helpdesk.utils.Messages;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static org.apache.poi.ss.util.CellUtil.createCell;
 
 @Slf4j
 @AllArgsConstructor
@@ -175,13 +191,135 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
     }
 
     @Override
-    public void exportarPdf(ReporteConsultaRequest request) {
+    public void exportarPdf(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+        generarPdf(request, response);
+    }
+
+
+    @Override
+    public void exportarXlsx(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+        generarExcel(request, response);
+    }
+
+
+    private void generarPdf(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+        // Creating the Object of Document
+        Document document = new Document(PageSize.A4);
+        // Getting instance of PdfWriter
+        PdfWriter.getInstance(document, response.getOutputStream());
+        // Opening the created document to change it
+        document.open();
+        // Creating font
+        // Setting font style and size
+        Font fontTiltle = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+        fontTiltle.setSize(20);
+        // Creating paragraph
+        Paragraph paragraph1 = new Paragraph("Reporte de Tickets", fontTiltle);
+        // Aligning the paragraph in the document
+        paragraph1.setAlignment(Paragraph.ALIGN_CENTER);
+        // Adding the created paragraph in the document
+        document.add(paragraph1);
+        // Creating a table of the 4 columns
+        PdfPTable table = new PdfPTable(7);
+        // Setting width of the table, its columns and spacing
+        table.setWidthPercentage(100f);
+        table.setWidths(new int[]{2, 3, 3, 3, 3, 3, 3});
+        table.setSpacingBefore(10);
+        // Create Table Cells for the table header
+        PdfPCell cell = new PdfPCell();
+        // Setting the background color and padding of the table cell
+        cell.setBackgroundColor(CMYKColor.BLUE);
+        cell.setPadding(5);
+        // Creating font
+        // Setting font style and size
+        Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN);
+        font.setColor(CMYKColor.WHITE);
+        // Adding headings in the created table cell or  header
+        // Adding Cell to table
+        cell.setPhrase(new Phrase("ID", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Descripcion", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Estado", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Fecha Generada", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Tipo", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Categoria", font));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Usuario", font));
+        table.addCell(cell);
+        List<ItemTicket> list = consultar(request);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        // Iterating the list of students
+        for (ItemTicket ticket : list) {
+            // Adding ticket getIdTicket
+            table.addCell(String.valueOf(ticket.getIdTicket()));
+            // Adding ticket getDescripcion
+            table.addCell(ticket.getDescripcion());
+            // Adding ticket getEstado
+            table.addCell(ticket.getEstado());
+            // Adding ticket getFechaGenerada
+            table.addCell(format.format(ticket.getFechaGenerada()));
+            // Adding ticket getTipo
+            table.addCell(ticket.getTipo());
+            // Adding ticket getCategoria
+            table.addCell(ticket.getCategoria());
+            // Adding ticket getUsername
+            table.addCell(ticket.getUsername());
+        }
+        // Adding the created table to the document
+        document.add(table);
+        // Closing the document
+        document.close();
+    }
+
+
+    private void generarExcel(ReporteConsultaRequest request, HttpServletResponse response) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Reporte");
+        XSSFRow row = sheet.createRow(0);
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeight(16);
+        style.setFont(font);
+        createCell(row, 0, "ID", style);
+        createCell(row, 1, "Descripcion", style);
+        createCell(row, 2, "Estado", style);
+        createCell(row, 3, "Fecha Generada", style);
+        createCell(row, 4, "Tipo", style);
+        createCell(row, 5, "Categoria", style);
+        createCell(row, 6, "Usuario", style);
+
+        writeRecord(workbook, sheet, request);
+        ServletOutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
 
     }
 
-    @Override
-    public void exportarXlsx(ReporteConsultaRequest request) {
-
+    private void writeRecord(XSSFWorkbook workbook, XSSFSheet sheet, ReporteConsultaRequest request) {
+        int rowCount = 1;
+        List<ItemTicket> list = consultar(request);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setFontHeight(14);
+        style.setFont(font);
+        for (ItemTicket ticket : list) {
+            XSSFRow row = sheet.createRow(rowCount++);
+            int columnCount = 0;
+            createCell(row, columnCount++, String.valueOf(ticket.getIdTicket()), style);
+            createCell(row, columnCount++, ticket.getDescripcion(), style);
+            createCell(row, columnCount++, ticket.getEstado(), style);
+            createCell(row, columnCount++, format.format(ticket.getFechaGenerada()), style);
+            createCell(row, columnCount++, ticket.getTipo(), style);
+            createCell(row, columnCount++, ticket.getCategoria(), style);
+            createCell(row, columnCount++, ticket.getUsername(), style);
+        }
     }
 
 
