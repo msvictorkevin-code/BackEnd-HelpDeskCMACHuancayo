@@ -5,11 +5,13 @@ import com.lowagie.text.pdf.CMYKColor;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.util.StringUtil;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -56,7 +58,7 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
     public RestResponse<List<EstadoTicketDTOResponse>> listarEstados() {
         RestResponse<List<EstadoTicketDTOResponse>> response = new RestResponse<>();
         List<EstadoTicketDTOResponse> list = new ArrayList<>();
-        list.add(new EstadoTicketDTOResponse("Inicializado"));
+        list.add(new EstadoTicketDTOResponse("Iniciado"));
         list.add(new EstadoTicketDTOResponse("En proceso"));
         list.add(new EstadoTicketDTOResponse("Asignado"));
         list.add(new EstadoTicketDTOResponse("Manual"));
@@ -119,47 +121,47 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
         String andOp = "";
 
 
-        if (Objects.nonNull(request.getIdTicket())) {
+        if (StringUtils.isNotEmpty(request.getIdTicket())) {
 
             builder.append(andOp);
             builder.append(" ");
             builder.append("id_ticket");
             builder.append("=:id_ticket");
             andOp = " AND ";
-            parameters.addValue("id_ticket", request.getIdTicket());
+            parameters.addValue("id_ticket", Integer.parseInt(request.getIdTicket()));
 
         }
 
-        if (Objects.nonNull(request.getIdCategoria())) {
+        if (StringUtils.isNotEmpty(request.getIdCategoria())) {
             builder.append(andOp);
             builder.append(" ");
             builder.append("t.id_categoria");
             builder.append("=:id_categoria");
             andOp = " AND ";
-            parameters.addValue("id_categoria", request.getIdCategoria());
+            parameters.addValue("id_categoria",  Integer.parseInt(request.getIdCategoria()));
 
         }
-        if (Objects.nonNull(request.getIdtipo())) {
+        if (StringUtils.isNotEmpty(request.getIdtipo())) {
             builder.append(andOp);
             builder.append(" ");
             builder.append("t.id_tipo");
             builder.append("=:id_tipo");
             andOp = " AND ";
-            parameters.addValue("id_tipo", request.getIdtipo());
+            parameters.addValue("id_tipo",  Integer.parseInt(request.getIdtipo()));
 
         }
 
-        if (Objects.nonNull(request.getIdUsuario())) {
+        if (StringUtils.isNotEmpty(request.getIdUsuario())) {
             builder.append(andOp);
             builder.append(" ");
             builder.append("t.id_usuario");
             builder.append("=:idUsuario");
             andOp = " AND ";
-            parameters.addValue("idUsuario", request.getIdUsuario());
+            parameters.addValue("idUsuario",  Integer.parseInt(request.getIdUsuario()));
 
         }
 
-        if (Objects.nonNull(request.getEstado())) {
+        if (StringUtils.isNotEmpty(request.getEstado())) {
             builder.append(andOp);
             builder.append(" ");
             builder.append("estado");
@@ -169,7 +171,7 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
 
         }
 
-        if (Objects.nonNull(request.getFechaInicio()) && Objects.nonNull(request.getFechaFin())) {
+        if (StringUtils.isNotEmpty(request.getFechaInicio()) && StringUtils.isNotEmpty(request.getFechaFin())) {
             builder.append(andOp);
             builder.append(" ");
             builder.append("fecha_generada ");
@@ -178,7 +180,7 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
             parameters.addValue("fechaFin", request.getFechaFin());
 
         }
-
+        log.info("SQL=>" + builder.toString());
         List<ItemTicket> list = null;
         try {
             list = namedParameterJdbcTemplate.query(builder.toString(), parameters, new TicketMapper());
@@ -273,6 +275,8 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
         document.add(table);
         // Closing the document
         document.close();
+
+
     }
 
 
@@ -298,6 +302,7 @@ public class ReporteDAORepositoryImpl implements ReporteDAORepository {
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
+
 
     }
 

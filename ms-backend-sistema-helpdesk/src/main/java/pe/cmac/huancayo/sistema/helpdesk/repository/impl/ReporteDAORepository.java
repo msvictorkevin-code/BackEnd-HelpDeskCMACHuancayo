@@ -2,10 +2,7 @@ package pe.cmac.huancayo.sistema.helpdesk.repository.impl;
 
 import jakarta.servlet.http.HttpServletResponse;
 import pe.cmac.huancayo.sistema.helpdesk.dto.RestResponse;
-import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.EstadoTicketDTOResponse;
-import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.ReporteConsultaRequest;
-import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.ReporteConsultaResponse;
-import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.UsuarioDTOResponse;
+import pe.cmac.huancayo.sistema.helpdesk.dto.reporte.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +13,8 @@ public interface ReporteDAORepository {
     RestResponse<List<UsuarioDTOResponse>> listarUsuarios();
 
     void exportarPdf(ReporteConsultaRequest request, HttpServletResponse response) throws IOException;
+
+
 
     void exportarXlsx(ReporteConsultaRequest request,HttpServletResponse response) throws IOException;
 
