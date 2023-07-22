@@ -66,8 +66,27 @@ public class ReporteController {
 
 
     @GetMapping(PathNames.URL_API_REPORTE_EXPORTAR_PDF)
-    public void exportarReportePdf(@RequestBody ReporteConsultaRequest request, HttpServletResponse response) {
+    public void exportarReportePdf(/*@RequestBody ReporteConsultaRequest request,*/
+                                   @RequestHeader("idTicket") String idTicket,
+                                   @RequestHeader("estado") String estado,
+                                   @RequestHeader("fechaInicio") String fechaInicio,
+                                   @RequestHeader("fechaFin") String fechaFin,
+                                   @RequestHeader("idtipo") String idtipo,
+                                   @RequestHeader("idCategoria") String idCategoria,
+                                   @RequestHeader("idUsuario") String idUsuario
+            , HttpServletResponse response) {
+
+
         try {
+          ReporteConsultaRequest  request = new ReporteConsultaRequest();
+            request.setIdTicket(idTicket);
+            request.setEstado(estado);
+            request.setFechaInicio(fechaInicio);
+            request.setFechaFin(fechaFin);
+            request.setIdtipo(idtipo);
+            request.setIdCategoria(idCategoria);
+            request.setIdUsuario(idUsuario);
+
             response.setContentType("application/pdf");
             DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
             String currentDateTime = dateFormat.format(new Date());
@@ -81,8 +100,23 @@ public class ReporteController {
     }
 
     @GetMapping(PathNames.URL_API_REPORTE_EXPORTAR_XLSX)
-    public void exportarReporteXlsx(@RequestBody ReporteConsultaRequest request, HttpServletResponse response) {
+    public void exportarReporteXlsx(/*@RequestBody ReporteConsultaRequest request,*/ @RequestHeader("idTicket") String idTicket,
+                                                                                     @RequestHeader("estado") String estado,
+                                                                                     @RequestHeader("fechaInicio") String fechaInicio,
+                                                                                     @RequestHeader("fechaFin") String fechaFin,
+                                                                                     @RequestHeader("idtipo") String idtipo,
+                                                                                     @RequestHeader("idCategoria") String idCategoria,
+                                                                                     @RequestHeader("idUsuario") String idUsuario, HttpServletResponse response) {
         try {
+            ReporteConsultaRequest  request = new ReporteConsultaRequest();
+            request.setIdTicket(idTicket);
+            request.setEstado(estado);
+            request.setFechaInicio(fechaInicio);
+            request.setFechaFin(fechaFin);
+            request.setIdtipo(idtipo);
+            request.setIdCategoria(idCategoria);
+            request.setIdUsuario(idUsuario);
+
             response.setContentType("application/octet-stream");
             DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
             String currentDateTime = dateFormatter.format(new Date());
@@ -90,7 +124,7 @@ public class ReporteController {
             String headerKey = "Content-Disposition";
             String headerValue = "attachment; filename=student" + currentDateTime + ".xlsx";
             response.setHeader(headerKey, headerValue);
-            reporteService.exportarXlsx(request,response);
+            reporteService.exportarXlsx(request, response);
         } catch (Exception ex) {
             log.error("ex=".concat(ex.getMessage()));
         }

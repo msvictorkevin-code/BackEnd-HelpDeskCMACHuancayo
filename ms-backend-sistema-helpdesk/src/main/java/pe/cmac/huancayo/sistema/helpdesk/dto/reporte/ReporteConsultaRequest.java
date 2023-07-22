@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ReporteConsultaRequest {
 
-    private Integer idTicket;
+    private String idTicket;
 
     private String estado;
 
@@ -13,10 +13,10 @@ public class ReporteConsultaRequest {
 
     private String fechaFin;
 
-    private Integer idtipo;
+    private String idtipo;
 
-    private Integer idCategoria;
+    private String idCategoria;
 
-    private Integer idUsuario;
+    private String idUsuario;
 
 }
